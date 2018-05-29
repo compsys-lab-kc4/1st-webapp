@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>グラフを使った可視化アプリの例</title>
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="http://mgskjaeveland.github.io/sgvizler/v/0.6/sgvizler.js"></script>
+    <script src="script/script.js"></script>
+    <script type="text/javascript">
+      // Prefix の設定
+      sgvizler.prefix('dbpedia-owl', 'http://dbpedia.org/ontology/');
+      sgvizler.prefix('rdf', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#');
+      sgvizler.prefix('category-ja', 'http://ja.dbpedia.org/resource/Category:');
+      sgvizler.prefix('prop-ja', 'http://ja.dbpedia.org/property/');
+      // HTMLファイルをロードしたら画面描画
+      $(document).ready(function() { sgvizler.containerDrawAll(); });
+  </script>
+</head>
+  <body>
+    <h1>グラフを使った可視化アプリの例</h1>
+    <select id="query" class="form-control">
+          <option>-選択してください-</option>
+          <option value="SoccerPlayer">サッカー選手</option>
+          <option value="BaseballPlayer">野球選手</option>
+          <option value="Comedian">お笑い芸人</option>
+          <option value="Actor">俳優</option>
+          <option value="Politician">政治家</option>
+    </select>
+
+    <h2 id="text1"></h2>
+    <h3 id="text2"></h3>
+    <div id="sgvzl_example_query"
+   data-sgvizler-endpoint="http://ja.dbpedia.org/sparql"
+   data-sgvizler-query=""
+   data-sgvizler-chart="google.visualization.BarChart"
+   data-sgvizler-loglevel="2"
+   style="width:1600px; height:1600px;"></div>
+
+    
+  </body>
+</html>

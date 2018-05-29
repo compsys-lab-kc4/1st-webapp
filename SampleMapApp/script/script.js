@@ -21,6 +21,9 @@ $(document).ready(function(){
 
 //Mapへのマーカー描画
 function render(json) {
+
+	console.log(json);
+
 	initMap();
 
 	var infoWindow = {};
