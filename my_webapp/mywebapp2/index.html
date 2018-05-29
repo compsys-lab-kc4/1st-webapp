@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>京都が含まれる本の検索</title>
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="http://mgskjaeveland.github.io/sgvizler/v/0.6/sgvizler.js"></script>
+    <script src="script/script.js"></script>
+    <script type="text/javascript">
+      // Prefix の設定
+      sgvizler.prefix('dc', 'http://purl.org/dc/elements/1.1/');
+      sgvizler.prefix('w', 'http://sws.ifi.uio.no/ont/world.owl#');
+      // HTMLファイルをロードしたら画面描画
+      $(document).ready(function() { sgvizler.containerDrawAll(); });
+  </script></head>
+  <body>
+    <h1>京都が含まれる本の検索</h1>
+
+    <form id="my-form">
+     <input type="text" id="text1" value="" placeholder='著者を入力してください'/>
+          <input type="button" id="button1" value="検索" >
+     <br>
+     <input type="text" id="text2" value="" placeholder='タイトルを入力してください'/>
+          <input type="button" id="button2" value="検索" >
+     <br>
+     <input type="button" id="button3" value="著者一覧" >
+     <input type="button" id="button4" value="クリア" >
+    </form>
+
+    <div id="sgvzl_example_table"
+	 data-sgvizler-endpoint="https://dydra.com/uedayou/kyoto_list/sparql"
+	 data-sgvizler-query="SELECT ?creator (count(?uri) AS ?noOfUri)
+WHERE { 
+  ?uri dc:creator ?creator. 
+}
+GROUP BY ?creator
+ORDER BY DESC(?noOfUri)
+"
+	 data-sgvizler-chart="google.visualization.Table"
+	 data-sgvizler-loglevel="2" style="width:800px; height:400px;"></div>
+
+  </body>
+</html>
+
+
