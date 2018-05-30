@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>人口ランキングの可視化</title>
+    <meta charset="UTF-8">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="http://mgskjaeveland.github.io/sgvizler/v/0.6/sgvizler.js"></script>
+    <script type="text/javascript">
+      // Prefix の設定
+      sgvizler.prefix('wd', 'http://sws.ifi.uio.no/d2rq/resource/');
+      sgvizler.prefix('w', 'http://sws.ifi.uio.no/ont/world.owl#');
+      // HTMLファイルをロードしたら画面描画
+      $(document).ready(function() { sgvizler.containerDrawAll(); });
+  </script></head>
+  <body>
+    <h1>人口ランキングを様々な形で可視化</h1>
+    <h2>アフリカ編</h2>
+    <h3>■地図(円グラフ)</h3>
+    <div id="sgvzl_example_query" 
+	 data-sgvizler-endpoint="http://sws.ifi.uio.no/sparql/world" 
+	 data-sgvizler-query="SELECT ?Country ?Population WHERE{ [] w:hasName ?Country ; 
+			      w:hasCountryPopulation ?Population;
+			      w:isCountryInContinent [ rdfs:label &quot;Africa&quot;  ] ;
+			      } ORDER BY DESC(?Population)"
+	 data-sgvizler-chart="google.visualization.GeoMap" 
+	 data-sgvizler-chart-options="title=Africa|region=002"	 
+	 data-sgvizler-loglevel="2" style="width:800px; height:400px;"></div>
+
+    <h3>■地図(塗りつぶし)</h3>
+    <div id="sgvzl_example_query_copy_1" 
+	 data-sgvizler-endpoint="http://sws.ifi.uio.no/sparql/world" 
+	 data-sgvizler-query="SELECT ?Country ?Population WHERE{ [] w:hasName ?Country ; 
+			      w:hasCountryPopulation ?Population; 
+			      w:isCountryInContinent [ rdfs:label &quot;Africa&quot; ] ;
+			      } ORDER BY DESC(?Population)" 
+	 data-sgvizler-chart="google.visualization.GeoChart" 
+	 data-sgvizler-chart-options="region=002" 
+	 data-sgvizler-loglevel="2" style="width:600px; height:300px;"></div>
+
+
+    <h3>■円グラフ</h3>
+    <div id="sgvzl_example_query_copy_2" 
+	 data-sgvizler-endpoint="http://sws.ifi.uio.no/sparql/world" 
+	 data-sgvizler-query="SELECT ?Country ?Population WHERE{ [] w:hasName ?Country ;
+			      w:hasCountryPopulation ?Population; 
+			      w:isCountryInContinent [ rdfs:label &quot;Africa&quot;
+			      ] ; } ORDER BY DESC(?Population)" 
+	 data-sgvizler-chart="google.visualization.PieChart" 
+	 data-sgvizler-loglevel="2" style="width:800px; height:400px;"></div>
+
+    <h3>■テーブル</h3>
+    <div id="sgvzl_example_table"
+         data-sgvizler-endpoint="http://sws.ifi.uio.no/sparql/world"
+         data-sgvizler-query="SELECT ?Country ?Population WHERE{ [] w:hasName ?Country ;  
+                              w:hasCountryPopulation ?Population;                         
+                              w:isCountryInContinent [ rdfs:label &quot;Africa&quot;     
+                               ] ; } ORDER BY DESC(?Population)"
+         data-sgvizler-chart="google.visualization.Table"
+         data-sgvizler-loglevel="2" style="width:800px; height:200px;"></div>
+  </body>
+</html>
