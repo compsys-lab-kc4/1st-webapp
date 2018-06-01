@@ -27,15 +27,14 @@
         <option value="Table">表</option>
         <option value="Bar">棒グラフ</option>
     </select>
-    
-    <h2 id="chartName"></h2>
+
     <div id="sgvzl_example_table"
       data-sgvizler-endpoint="http://ja.dbpedia.org/sparql"
-      data-sgvizler-query="SELECT DISTINCT (STR(?label) AS ?Label) ?dens where {
+      data-sgvizler-query="SELECT DISTINCT (STR(?label) AS ?country) ?density where {
         dbpedia:国の一覧 ?p ?o.
         ?o rdfs:label ?label.
-        ?o prop-ja:人口密度値 ?dens.
-        }order by desc(?dens) limit 15"
+        ?o prop-ja:人口密度値 ?density.
+        }order by desc(?density) limit 15"
       data-sgvizler-chart=""
       data-sgvizler-loglevel="2" style="width:800px; height:400px;">
     </div>
