@@ -7,6 +7,7 @@
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript" src="http://mgskjaeveland.github.io/sgvizler\/v/0.6/sgvizler.js"></script>
+    <script src="script/script.js"></script>
     <script type="text/javascript">
       // Prefix の設定
       sgvizler.prefix('wd', 'http://sws.ifi.uio.no/d2rq/resource/');
@@ -21,27 +22,24 @@
   </script></head>
   <body>
     <h1>国別人口密度</h1>
-    <h2>表</h2>
+    <select id="query" class="form-control">
+        <option>--選択してください--</option>
+        <option value="Table">表</option>
+        <option value="Bar">棒グラフ</option>
+    </select>
+    
+    <h2 id="chartName"></h2>
     <div id="sgvzl_example_table"
-    data-sgvizler-endpoint="http://ja.dbpedia.org/sparql"
-    data-sgvizler-query="SELECT DISTINCT (STR(?label) AS ?Label) ?dens where {
-      dbpedia:国の一覧 ?p ?o.
-      ?o rdfs:label ?label.
-      ?o prop-ja:人口密度値 ?dens.
-    }order by desc(?dens)"
-    data-sgvizler-chart="google.visualization.Table"
-    data-sgvizler-loglevel="2" style="width:800px; height:400px;"></div>
+      data-sgvizler-endpoint="http://ja.dbpedia.org/sparql"
+      data-sgvizler-query="SELECT DISTINCT (STR(?label) AS ?Label) ?dens where {
+        dbpedia:国の一覧 ?p ?o.
+        ?o rdfs:label ?label.
+        ?o prop-ja:人口密度値 ?dens.
+        }order by desc(?dens) limit 15"
+      data-sgvizler-chart=""
+      data-sgvizler-loglevel="2" style="width:800px; height:400px;">
+    </div>
 
-    <h2>棒グラフ</h2>
-    <div id="sgvzl_example_bar"
-    data-sgvizler-endpoint="http://ja.dbpedia.org/sparql"
-    data-sgvizler-query="SELECT DISTINCT (STR(?label) AS ?Label) ?dens where {
-      dbpedia:国の一覧 ?p ?o.
-      ?o rdfs:label ?label.
-      ?o prop-ja:人口密度値 ?dens.
-    }order by desc(?dens) limit 15"
-    data-sgvizler-chart="google.visualization.BarChart"
-    data-sgvizler-loglevel="2" style="width:800px; height:400px;"></div>
 
   </body>
 </html>
