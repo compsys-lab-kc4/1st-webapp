@@ -1,0 +1,120 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Tsuihiji's App with dbpedia</title>
+  <meta charset="UTF-8">
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.js"></script>
+  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+  <script type="text/javascript" src="http://mgskjaeveland.github.io/sgvizler/v/0.6/sgvizler.js"></script>
+  <script type="text/javascript" src="input-jquery.js"></script>
+  <script type="text/javascript" src="d3.v3.min.js"></script>
+  <script type="text/javascript" src="d3sparql.js"></script>
+  <script type="text/javascript">
+    // Prefix の設定
+    sgvizler.prefix('prop-ja', 'http://ja.dbpedia.org/property/');
+    // HTMLファイルをロードしたら画面描画
+    $(document).ready(function () { sgvizler.containerDrawAll(); });
+    
+    // 実行
+    function exec(){
+        var month = $('.chmon').val();
+        var day = $('.chday').val();
+        sparql = "PREFIX prop-ja:<http://ja.dbpedia.org/property/> SELECT distinct ?year ?name WHERE {?s prop-ja:生年 ?year; prop-ja:生月 " + month + "; prop-ja:生日 " + day + "; rdfs:label ?name.} ORDER BY ?year LIMIT 100"
+        d3sparql.query("http://ja.dbpedia.org/sparql", sparql, render)
+    }
+
+    function render(json) {
+        var config = {
+          "selector": "#result"
+        }
+        d3sparql.htmltable(json, config)
+    }
+  </script>
+</head>
+
+<body>
+  <h2>同じ誕生日の人が多い日上位20件</h2>
+  <div id="sgvzl_example_query"
+   data-sgvizler-endpoint="http://ja.dbpedia.org/sparql" data-sgvizler-query="SELECT (CONCAT(?M,'/',?D) AS ?birthDay) (COUNT(?s) AS ?num)
+   WHERE{?a prop-ja:生月 ?M;
+            prop-ja:生日 ?D;
+            rdfs:label ?s.
+   } GROUP BY ?M ?D
+     ORDER BY DESC(?num) 
+     LIMIT 20"
+    data-sgvizler-chart="google.visualization.BarChart" data-sgvizler-loglevel="2"
+    style="width:800px; height:400px;">
+  </div>
+
+
+  <h2>あなたと同じ誕生日の人は？</h2>
+
+  <select name="birthM" class="chmon">
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+    <option value="5">5</option>
+    <option value="6">6</option>
+    <option value="7">7</option>
+    <option value="8">8</option>
+    <option value="9">9</option>
+    <option value="10">10</option>
+    <option value="11">11</option>
+    <option value="12">12</option>
+  </select> 月
+
+  <select name="birthD" class="chday">
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+    <option value="5">5</option>
+    <option value="6">6</option>
+    <option value="7">7</option>
+    <option value="8">8</option>
+    <option value="9">9</option>
+    <option value="10">10</option>
+    <option value="11">11</option>
+    <option value="12">12</option>
+    <option value="13">13</option>
+    <option value="14">14</option>
+    <option value="15">15</option>
+    <option value="16">16</option>
+    <option value="17">17</option>
+    <option value="18">18</option>
+    <option value="19">19</option>
+    <option value="20">20</option>
+    <option value="21">21</option>
+    <option value="22">22</option>
+    <option value="23">23</option>
+    <option value="24">24</option>
+    <option value="25">25</option>
+    <option value="26">26</option>
+    <option value="27">27</option>
+    <option value="28">28</option>
+    <option value="29">29</option>
+    <option value="30">30</option>
+    <option value="31">31</option>
+  </select> 日
+
+  <button class="btn" type="button" onclick="exec()">検索</button>
+
+  <div id="result"></div>
+
+  <!-- <h3>■テーブル</h3>
+    <div id="sgvzl_example_table"
+	 data-sgvizler-endpoint="http://ja.dbpedia.org/sparql"
+	 data-sgvizler-query="SELECT ?Month ?Date (COUNT(?s) AS ?num)
+	 WHERE{?s prop-ja:生月 ?Month;
+		        prop-ja:生日 ?Date.
+   } GROUP BY ?Month ?Date
+     ORDER BY DESC(?num) 
+     LIMIT 20"
+	 data-sgvizler-chart="google.visualization.Table"
+	 data-sgvizler-loglevel="2" style="width:800px; height:400px;"></div> -->
+</body>
+
+</html>
