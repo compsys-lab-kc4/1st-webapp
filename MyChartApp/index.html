@@ -37,14 +37,16 @@
 <body>
   <h2>同じ誕生日の人が多い日上位20件</h2>
   <div id="sgvzl_example_query"
-   data-sgvizler-endpoint="http://ja.dbpedia.org/sparql" data-sgvizler-query="SELECT (CONCAT(?M,'/',?D) AS ?birthDay) (COUNT(?s) AS ?num)
-   WHERE{?a prop-ja:生月 ?M;
-            prop-ja:生日 ?D;
-            rdfs:label ?s.
-   } GROUP BY ?M ?D
-     ORDER BY DESC(?num) 
-     LIMIT 20"
-    data-sgvizler-chart="google.visualization.BarChart" data-sgvizler-loglevel="2"
+    data-sgvizler-endpoint="http://ja.dbpedia.org/sparql" 
+    data-sgvizler-query="SELECT (CONCAT(?M,'/',?D) AS ?birthDay) (COUNT(?s) AS ?num)
+                         WHERE{?a prop-ja:生月 ?M;
+                           prop-ja:生日 ?D;
+                           rdfs:label ?s.
+                         } GROUP BY ?M ?D
+                         ORDER BY DESC(?num) 
+                         LIMIT 20"
+    data-sgvizler-chart="google.visualization.BarChart" 
+    data-sgvizler-loglevel="2"
     style="width:800px; height:400px;">
   </div>
 
@@ -103,18 +105,7 @@
   <button class="btn" type="button" onclick="exec()">検索</button>
 
   <div id="result"></div>
-
-  <!-- <h3>■テーブル</h3>
-    <div id="sgvzl_example_table"
-	 data-sgvizler-endpoint="http://ja.dbpedia.org/sparql"
-	 data-sgvizler-query="SELECT ?Month ?Date (COUNT(?s) AS ?num)
-	 WHERE{?s prop-ja:生月 ?Month;
-		        prop-ja:生日 ?Date.
-   } GROUP BY ?Month ?Date
-     ORDER BY DESC(?num) 
-     LIMIT 20"
-	 data-sgvizler-chart="google.visualization.Table"
-	 data-sgvizler-loglevel="2" style="width:800px; height:400px;"></div> -->
+  
 </body>
 
 </html>
