@@ -8,9 +8,9 @@
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.js"></script>
   <script type="text/javascript" src="https://www.google.com/jsapi"></script>
   <script type="text/javascript" src="http://mgskjaeveland.github.io/sgvizler/v/0.6/sgvizler.js"></script>
-  <script type="text/javascript" src="input-jquery.js"></script>
   <script type="text/javascript" src="d3.v3.min.js"></script>
   <script type="text/javascript" src="d3sparql.js"></script>
+  <script type="text/javascript" src="input-jquery.js"></script>
   <script type="text/javascript">
     // Prefix の設定
     sgvizler.prefix('prop-ja', 'http://ja.dbpedia.org/property/');
@@ -54,58 +54,36 @@
   <h2>あなたと同じ誕生日の人は？</h2>
 
   <select name="birthM" class="chmon">
-    <option value="1">1</option>
-    <option value="2">2</option>
-    <option value="3">3</option>
-    <option value="4">4</option>
-    <option value="5">5</option>
-    <option value="6">6</option>
-    <option value="7">7</option>
-    <option value="8">8</option>
-    <option value="9">9</option>
-    <option value="10">10</option>
-    <option value="11">11</option>
-    <option value="12">12</option>
+    <script>
+      var option = '';
+      for (var i = 1; i <= 12; i++) {
+        option += '<option value="' + i + '">' + i + '</option>\n';
+      }
+      $('.chmon').html(option);
+    </script>
   </select> 月
-
+  
   <select name="birthD" class="chday">
-    <option value="1">1</option>
-    <option value="2">2</option>
-    <option value="3">3</option>
-    <option value="4">4</option>
-    <option value="5">5</option>
-    <option value="6">6</option>
-    <option value="7">7</option>
-    <option value="8">8</option>
-    <option value="9">9</option>
-    <option value="10">10</option>
-    <option value="11">11</option>
-    <option value="12">12</option>
-    <option value="13">13</option>
-    <option value="14">14</option>
-    <option value="15">15</option>
-    <option value="16">16</option>
-    <option value="17">17</option>
-    <option value="18">18</option>
-    <option value="19">19</option>
-    <option value="20">20</option>
-    <option value="21">21</option>
-    <option value="22">22</option>
-    <option value="23">23</option>
-    <option value="24">24</option>
-    <option value="25">25</option>
-    <option value="26">26</option>
-    <option value="27">27</option>
-    <option value="28">28</option>
-    <option value="29">29</option>
-    <option value="30">30</option>
-    <option value="31">31</option>
+    <script>
+      var option = '';
+      for (var i = 1; i <= 31; i++) {
+        option += '<option value="' + i + '">' + i + '</option>\n';
+      }
+      $('.chday').html(option);
+    </script>
   </select> 日
+
+  <!-- 間違った範囲の日にちが選択されないように制限 -->
+  <script>
+    $('.chmon').change(function() {
+      formSetDay();
+    })
+  </script>
 
   <button class="btn" type="button" onclick="exec()">検索</button>
 
   <div id="result"></div>
-  
+
 </body>
 
 </html>
