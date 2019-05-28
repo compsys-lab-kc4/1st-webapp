@@ -1,0 +1,14 @@
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX dbr: <http://dbpedia.org/resource/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbt: <http://purl.org/dc/terms/>
+PREFIX dbc: <http://dbpedia.org/resource/Category:>
+
+select distinct ?State ?population2010 where {
+?s rdfs:label ?State.
+?s dbt:subject dbc:States_of_the_United_States.
+?s rdf:type dbo:Place.
+?s dbp:2010pop ?population2010
+FILTER (LANG(?State)='en') .
+} LIMIT 100
