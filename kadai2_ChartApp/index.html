@@ -1,0 +1,111 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>グラフを使った可視化アプリの例</title>
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="http://mgskjaeveland.github.io/sgvizler/v/0.6/sgvizler.js"></script>
+    <script type="text/javascript">
+      // Prefix の設定
+      sgvizler.prefix('dbp-owl', 'http://dbpedia.org/ontology/');
+      sgvizler.prefix('rdf', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#');
+      sgvizler.prefix('category', 'http://ja.dbpedia.org/resource/Category:');
+      sgvizler.prefix('dcterms', 'http://purl.org/dc/terms/');
+      sgvizler.prefix('rdfs', 'http://www.w3.org/2000/01/rdf-schema#')
+      // HTMLファイルをロードしたら画面描画
+      $(document).ready(function() { sgvizler.containerDrawAll(); });
+  </script></head>
+  <body>
+    <h1>グラフを使った可視化アプリ</h1>
+    <h2>大学の多い都道府県上位20件</h2>
+    <h3>■縦棒グラフ</h3>
+    <div id="sgvzl_example_query"
+	 data-sgvizler-endpoint="http://ja.dbpedia.org/sparql"
+	 data-sgvizler-query="
+   SELECT DISTINCT ?label count(?univ) AS ?university
+   WHERE {
+     ?pref rdf:type dbp-owl:Place;
+           dcterms:subject category:日本の都道府県;
+           rdfs:label ?label.
+     ?univ rdf:type dbp-owl:University;
+           dbp-owl:locationCity ?pref.
+   } GROUP BY ?label
+   ORDER BY DESC(?university) LIMIT 20
+"
+	 data-sgvizler-chart="google.visualization.ColumnChart"
+	 data-sgvizler-loglevel="2"
+	 style="width:950px; height:500px;"></div>
+
+   <h3>■横棒グラフ</h3>
+   <div id="sgvzl_example_query1"
+  data-sgvizler-endpoint="http://ja.dbpedia.org/sparql"
+  data-sgvizler-query="
+  SELECT DISTINCT ?label count(?univ) AS ?university
+  WHERE {
+    ?pref rdf:type dbp-owl:Place;
+          dcterms:subject category:日本の都道府県;
+          rdfs:label ?label.
+    ?univ rdf:type dbp-owl:University;
+          dbp-owl:locationCity ?pref.
+  } GROUP BY ?label
+  ORDER BY DESC(?university) LIMIT 20
+"
+  data-sgvizler-chart="google.visualization.BarChart"
+  data-sgvizler-loglevel="2"
+  style="width:950px; height:500px;"></div>
+
+
+    <h3>■テーブル</h3>
+    <div id="sgvzl_example_table"
+	 data-sgvizler-endpoint="http://ja.dbpedia.org/sparql"
+	 data-sgvizler-query="
+   SELECT DISTINCT ?label count(?univ) AS ?university
+   WHERE {
+     ?pref rdf:type dbp-owl:Place;
+           dcterms:subject category:日本の都道府県;
+           rdfs:label ?label.
+     ?univ rdf:type dbp-owl:University;
+           dbp-owl:locationCity ?pref.
+   } GROUP BY ?label
+   ORDER BY DESC(?university) LIMIT 20"
+	 data-sgvizler-chart="google.visualization.Table"
+	 data-sgvizler-loglevel="2" style="width:800px; height:400px;"></div>
+
+   <h3>■円グラフ</h3>
+   <div id="sgvzl_example_table2"
+  data-sgvizler-endpoint="http://ja.dbpedia.org/sparql"
+  data-sgvizler-query="
+  SELECT DISTINCT ?label count(?univ) AS ?university
+  WHERE {
+    ?pref rdf:type dbp-owl:Place;
+          dcterms:subject category:日本の都道府県;
+          rdfs:label ?label.
+    ?univ rdf:type dbp-owl:University;
+          dbp-owl:locationCity ?pref.
+  } GROUP BY ?label
+  ORDER BY DESC(?university) LIMIT 20"
+  data-sgvizler-chart="google.visualization.PieChart"
+  data-sgvizler-loglevel="2" style="width:800px; height:400px;"></div>
+
+  <h3>■ヒストグラム</h3>
+  <div id="sgvzl_example_query3"
+ data-sgvizler-endpoint="http://ja.dbpedia.org/sparql"
+ data-sgvizler-query="
+ SELECT DISTINCT ?label count(?univ) AS ?university
+ WHERE {
+   ?pref rdf:type dbp-owl:Place;
+         dcterms:subject category:日本の都道府県;
+         rdfs:label ?label.
+   ?univ rdf:type dbp-owl:University;
+         dbp-owl:locationCity ?pref.
+ } GROUP BY ?label
+ ORDER BY DESC(?university) LIMIT 20
+"
+ data-sgvizler-chart="google.visualization.Histogram"
+ data-sgvizler-loglevel="2"
+ style="width:950px; height:500px;"></div>
+
+  </body>
+</html>
