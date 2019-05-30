@@ -74,7 +74,7 @@ d3sparql.fetch = function(url, callback) {
 }
 
 d3sparql.query = function(endpoint, sparql, callback) {
-  var url = endpoint + "?query=" + encodeURIComponent(sparql) + "&output=json"
+  var url = endpoint + "?query=" + encodeURIComponent(sparql)
   if (d3sparql.debug) { console.log(endpoint) }
   d3sparql.fetch(url, callback)
 }
@@ -1680,11 +1680,11 @@ d3sparql.treemapzoom = function(json, config) {
   }
 
   // Compute the treemap layout recursively such that each group of siblings
-  // uses the same size (1ﾃ�1) rather than the dimensions of the parent cell.
+  // uses the same size (1×1) rather than the dimensions of the parent cell.
   // This optimizes the layout for the current zoom state. Note that a wrapper
   // object is created for the parent node for each group of siblings so that
-  // the parent窶冱 dimensions are not discarded as we recurse. Since each group
-  // of sibling was laid out in 1ﾃ�1, we must rescale to fit using absolute
+  // the parent’s dimensions are not discarded as we recurse. Since each group
+  // of sibling was laid out in 1×1, we must rescale to fit using absolute
   // coordinates. This lets us use a viewport to zoom.
   function layout(d) {
     if (d.children) {

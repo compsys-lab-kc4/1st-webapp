@@ -13,7 +13,7 @@ function onButtonClick() {
     sparql = sparql + " " + "FILTER REGEX (str(?heading), !&quot会^&quot)"
     sparql = sparql + " " + "FILTER REGEX (str(?heading), !&quot大学^&quot)"
     sparql = sparql + " " + "FILTER REGEX (str(?heading), !&quot社^&quot)}"
-    d3sparql.query("http://id.ndl.go.jp/auth/ndla/", sparql, render)
+    d3sparql.query("http://id.ndl.go.jp/auth/ndla", sparql, render)
   }
 }
 
