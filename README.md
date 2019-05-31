@@ -2,5 +2,5 @@
 
 このディレクトリには，以下のサンプルが含まれています．
 
-* SampleChartApp Sgivzler を使ったグラフ可視化アプリのサンプル
-* SampleMapApp Google Maps による地図可視化アプリのサンプル
+MyChartApp Sgivzler を使ったグラフ可視化アプリ
+
