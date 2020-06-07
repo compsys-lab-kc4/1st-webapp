@@ -1,0 +1,19 @@
+html, main {
+	background: #f1d8e9;
+}
+
+.wrapper {
+	width: 1080px;
+	margin: 0 auto;
+}
+
+#gmap {
+	height: 400px;
+	width: 100%;
+	margin: 0 auto;
+}
+
+#query {
+	width: 100%;
+	margin: 20px auto;
+}

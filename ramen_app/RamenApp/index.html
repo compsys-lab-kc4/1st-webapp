@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;" charset="utf-8"/>
+    <title>TSUKUBA RAMEN MAP</title>
+    <link rel="stylesheet" href="./style/style.css">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/d3.v3.min.js"></script>
+    <script src="js/d3sparql.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBoB7vCT1vkTdzyA-JGsCHd5JWKd-AZsj4"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="script/script.js"></script> <!-- SPARQL問合せ処理やMapの描画 -->
+  </head>
+  <body>
+    <main>
+      <div class="wrapper">
+        <h1>~TSUKUBA RAMEN MAP~</h1>
+        <select id="query" class="form-control">
+          <option>-種類を選択-</option>
+          <option value="all">ALL</option>
+          <option value="name">名前で検索</option>
+          <option value="area">地区で検索</option>
+        </select>
+        <div id="tbox"></div>
+        <div id="gmap"></div>
+        <div id="result"></div>
+        <div id="box1"></div>
+        <div id="box2"></div>
+      </div>
+    </main>
+  </body>
+</html>

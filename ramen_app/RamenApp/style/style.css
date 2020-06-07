@@ -1,0 +1,64 @@
+html, main {
+	background: linear-gradient(to right, rgb(248, 246, 103) 0%, rgb(241, 145, 107) 100%);
+	/*background: rgb(241, 215, 101);*/
+}
+
+h1 {
+	padding: 0.1em 0;/*上下の余白*/
+	border-bottom: solid 3px #e95656;/*下線*/
+	width: 50%;
+	text-align:center;
+	margin: auto;
+}
+
+.wrapper {
+	width: 1080px;
+	margin: auto;
+}
+
+#gmap {
+	height: 600px;
+	width: 70%;
+	float: left;
+	margin-right: auto;
+	margin-bottom: 30px;
+}
+
+#box1 {
+	font-size: 200%;
+	height: 200px; 
+	width: 28%;
+	float : right;
+	margin-left: auto; 
+
+	padding: 0.5em 1em;
+    color: rgb(231, 98, 98);
+    background: #f7e8c1;/*背景色*/
+    border-top: solid 6px #e95656;
+    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.32);/*影*/	
+}
+
+#box2 {
+	height: 400px; 
+	width: 28%;
+	float : right;
+	margin-left: auto; 
+	margin-bottom: 30px;
+	word-break: break-all;
+	padding: 0.5em 1em;
+    color: rgb(240, 94, 75);
+    background: #f7e8c1;/*背景色*/
+    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.32);/*影*/
+}
+
+#tbox {
+	width: 40%;
+	margin: 20px auto;
+	float : left;
+}
+
+#query {
+	width: 40%;
+	margin: 20px 20px;
+	float : left;
+}

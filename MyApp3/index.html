@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;" charset="utf-8"/>
+    <title>MyApp3</title>
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/d3.v3.min.js"></script>
+    <script src="js/d3sparql.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBoB7vCT1vkTdzyA-JGsCHd5JWKd-AZsj4"></script>
+    <script src="./bootstrap/js/bootstrap.min.js"></script>
+    <script src="script/pref.js"></script> <!-- 経度緯度情報 -->
+    <script src="script/script.js"></script> <!-- SPARQL問合せ処理やMapの描画 -->
+  </head>
+  <body>
+    <main>
+     <h1>都道府県別の様々な人口ランキングを可視化</h1>
+      <div class="wrapper">
+        <select id="query" class="form-control">
+          <option>-種類を選択-</option>
+          <option value="Athlete">Athlete</option>
+          <option value="Scientist">Scientist</option>
+          <option value="Comedian">Comedian</option>
+          <option value="Politician">Politician</option>
+        </select>
+        <div id="gmap"></div>
+        <div id="result"></div>
+      </div>
+    </main>
+  </body>
+</html>

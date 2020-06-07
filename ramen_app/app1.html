@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>ラーメンランキング</title>
+    <meta charset="UTF-8">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="http://mgskjaeveland.github.io/sgvizler/v/0.6/sgvizler.js"></script>
+    <script type="text/javascript">
+      // Prefix の設定
+      //sgvizler.prefix('dbpedia-owl', 'http://dbpedia.org/ontology/');
+      //sgvizler.prefix('rdf', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#');
+      //sgvizler.prefix('dbpedia-ja', 'http://ja.dbpedia.org/resource/');
+      //sgvizler.prefix('category-ja', 'http://ja.dbpedia.org/resource/Category:');
+      // HTMLファイルをロードしたら画面描画
+      $(document).ready(function() { sgvizler.containerDrawAll(); });
+  </script></head>
+  <body>
+    <h1>ランキング</h1>
+    <h2>開店時間1ごとのグラフを作る例</h2>
+    <h3>■テーブル</h3>
+    <div id="sgvzl_example_table"
+         data-sgvizler-endpoint="http://enpit.coins.tsukuba.ac.jp:3030/s1611399/query"
+         data-sgvizler-query="SELECT DISTINCT ?o (count(?subject) As ?c)
+                              WHERE {
+                              ?subject <http://www.coins.tsukuba.ac.jp/~s1611399/lod/ramendata.ttl/property/開店1> ?o;
+                              }
+                              GROUP BY ?o
+                              ORDER BY DESC(?c)"
+         data-sgvizler-chart="google.visualization.Table"
+         data-sgvizler-loglevel="2" style="width:800px; height:200px;"></div>
+    <h3>■棒グラフ</h3>
+    <div id="sgvzl_example_query"
+         data-sgvizler-endpoint="http://enpit.coins.tsukuba.ac.jp:3030/s1611399/query"
+         data-sgvizler-query="SELECT DISTINCT ?o (count(?subject) As ?c)
+                              WHERE {
+                              ?subject <http://www.coins.tsukuba.ac.jp/~s1611399/lod/ramendata.ttl/property/開店1> ?o;
+                              }
+                              GROUP BY ?o
+                              ORDER BY DESC(?c)"     
+          data-sgvizler-chart="google.visualization.ColumnChart"
+          data-sgvizler-loglevel="2"
+          style="width:800px; height:400px;"></div>
+  </body>
+</html>
