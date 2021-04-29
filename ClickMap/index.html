@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>クリックで地域データ取得</title>
+  	<meta charset="utf-8">
+  	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- plugin -->
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/d3.v3.min.js"></script>
+    <script src="js/d3sparql.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ==" crossorigin="">
+    <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js" integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw==" crossorigin=""></script>
+    <script src="Leaflet.singleclick/singleclick.js"></script>
+    <script src="script/mapscript.js"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="http://mgskjaeveland.github.io/sgvizler/v/0.6/sgvizler.js"></script>
+    <style type="text/css">
+    <!--
+        #mapid {
+        	height: 500px; width: 400px;
+        	display :inline-block;
+        }
+    -->
+    </style>
+  </head>
+  <body>
+
+
+
+
+<table id="resultTable">
+	<tr>
+		<td rowspan="20"><div id="mapid"></div></td>
+		<td colspan="3"> 動作しないときは<br>e-Statエンドポイントが稼働しているかどうかを<br>確認してください。 </td>
+	</tr>
+	<tr>
+		<th></th>
+		<th bgcolor="#FFEEFF">自治体</th>
+		<th bgcolor="#FFFFEE">小地域</th>
+	</tr>
+	<tr>
+		<th>名称</th>
+		<td id="municipality" bgcolor="#FFEEFF">（地図をクリック</td>
+		<td id="area" bgcolor="#FFFFEE">してください）</td>
+	</tr>
+	<tr>
+		<th>番号</th>
+		<td id="municipalityCode" bgcolor="#FFEEFF"></td>
+		<td id="areaCode" bgcolor="#FFFFEE"></td>
+	</tr>
+	<tr>
+	</tr>
+	<tr>
+		<th>人口</th>
+		<td id="population" style=" text-align: right;" bgcolor="#FFEEFF"></td>
+		<td id="areaPopulation" style=" text-align: right;" bgcolor="#FFFFEE"></td>
+	</tr>
+	<tr>
+		<th>外国籍人口</th>
+		<td id="fpopulation" style=" text-align: right;" bgcolor="#FFEEFF"></td>
+		<td style=" text-align: right;" bgcolor="#FFFFEE"> ND </td>
+	</tr>
+	<tr>
+		<th>　</th>
+		<td bgcolor="#FFEEFF"></td>
+		<td bgcolor="#FFFFEE"></td>
+	</tr>
+	<tr>
+		<th>　</th>
+		<td bgcolor="#FFEEFF"></td>
+		<td bgcolor="#FFFFEE"></td>
+	</tr>
+	<tr>
+		<th>　</th>
+		<td id="geoPol" bgcolor="#FFEEFF"></td>
+		<td id="showQuery" bgcolor="#FFFFEE"></td>
+	</tr>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+<script>
+var sgQ;
+// Prefix の設定
+sgvizler.prefix('rdfs', 'http://www.w3.org/2000/01/rdf-schema#');
+sgvizler.prefix('dcterms', 'http://purl.org/dc/terms/');
+sgvizler.prefix('geo', 'http://www.opengis.net/ont/geosparql#');
+sgvizler.prefix('ogcf', 'http://www.opengis.net/def/function/geosparql/');
+// HTMLファイルをロードしたら画面描画
+$(document).ready(function() { 
+ 	sgvizler.containerDrawAll(); 
+});
+
+// Map????{???
+var map = L.map('mapid',{
+  center: [36.0950, 140.1040], 
+  zoom: 15,
+  minZoom: 1,
+  maxZoom: 16
+});
+    
+var sparql = ""
+L.tileLayer(
+// 地理院地図利用
+	'http://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png',
+	{
+		attribution: "<a href='http://www.gsi.go.jp/kikakuchousei/kikakuchousei40182.html' target='_blank'>国土地理院</a>"
+	}
+).addTo(map);
+
+map.on('singleclick',function ( e ) {
+	L.popup().setLatLng( e.latlng )
+	.setContent( '<p>取得座標</p>' + e.latlng )
+	.openOn( map );
+	
+  document.getElementById("municipality").innerHTML = "（取得中）";
+  document.getElementById("area").innerHTML = "（取得中）";
+  document.getElementById("municipalityCode").innerHTML  = "（取得中）";
+  document.getElementById("areaCode").innerHTML = "（取得中）";
+	document.getElementById("population").innerHTML = "（取得中）";
+	document.getElementById("fpopulation").innerHTML = "（取得中）";
+	document.getElementById("areaPopulation").innerHTML = "（取得中）"
+	
+   	var sparqlQuery = "";
+   	sparqlQuery = sparqlQuery + " PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#> \n";
+   	sparqlQuery = sparqlQuery + " PREFIX dcterms:<http://purl.org/dc/terms/> \n";
+   	sparqlQuery = sparqlQuery + " PREFIX geo: <http://www.opengis.net/ont/geosparql#> \n";
+   	sparqlQuery = sparqlQuery + " PREFIX ogcf: <http://www.opengis.net/def/function/geosparql/> \n";
+   	sparqlQuery = sparqlQuery + " select DISTINCT ?municipality ?area ?municipalityCode ?areaCode ?geom where { \n";
+   	sparqlQuery = sparqlQuery + " ?s geo:hasGeometry ?polygon ; \n";
+   	sparqlQuery = sparqlQuery + " rdfs:label ?area ; \n";
+   	sparqlQuery = sparqlQuery + " dcterms:identifier ?areaCode ; \n";
+   	sparqlQuery = sparqlQuery + " dcterms:isPartOf / rdfs:label ?municipality . \n";
+   	sparqlQuery = sparqlQuery + " ?polygon geo:asWKT ?geom . \n";
+   	sparqlQuery = sparqlQuery + " FILTER (ogcf:sfContains(?geom, \"POINT(";
+   	sparqlQuery = sparqlQuery + e.latlng.lng;        	
+   	sparqlQuery = sparqlQuery + " ";
+   	sparqlQuery = sparqlQuery + e.latlng.lat;
+   	sparqlQuery = sparqlQuery + " )\"^^geo:wktLiteral)) . \n";
+   	sparqlQuery = sparqlQuery + " FILTER (LANG(?municipality)='ja') . \n";
+   	sparqlQuery = sparqlQuery + " ?s2 rdfs:label ?municipality ; \n";
+   	sparqlQuery = sparqlQuery + " dcterms:identifier ?municipalityCode . \n";
+   	sparqlQuery = sparqlQuery + " ";
+   	sparqlQuery = sparqlQuery + " } \n";
+    //document.getElementById("showQuery").innerHTML = "<textarea>" + sparqlQuery + "</textarea >";
+   	d3sparql.query("http://data.e-stat.go.jp/lod/sparql/alldata/query", sparqlQuery, render1)
+	} );
+
+
+
+
+function render1(json) {
+	municipality = json["results"]["bindings"]["0"]["municipality"]["value"];
+	document.getElementById("municipality").innerHTML = municipality;
+	document.getElementById("area").innerHTML = json["results"]["bindings"]["0"]["area"]["value"];
+	var municipalityCode = json["results"]["bindings"]["0"]["municipalityCode"]["value"];
+	document.getElementById("municipalityCode").innerHTML = municipalityCode;
+	var areaCode = json["results"]["bindings"]["0"]["areaCode"]["value"];
+	document.getElementById("areaCode").innerHTML = areaCode;
+	// 参考：https://day-journal.com/memo/leaflet-032/
+	var geoPol = json["results"]["bindings"]["0"]["geom"]["value"];
+	geoPol = geoPol.slice(51);
+	geoPol = geoPol.replace("((", " ");
+	geoPol = geoPol.replace("))", " ");
+	//geoPol = geoPol.replace(/, /g, "][");
+	//geoPol = geoPol.replace(/ /g, ",");
+	//var geoPolarray = dArray(geoPol);
+	var geoPolarray = geoPol.trim().split(',').map(function(item){
+		return item.trim().replace(/\s+/g,' ').split(' ');
+	});
+	//document.getElementById("geoPol").innerHTML = "<textarea>" + toString.call(geoPolarray) + "</textarea>";
+	//document.getElementById("geoPol").innerHTML = "<textarea>" + toString.call(geoPolarray[0]) + "</textarea>";
+	var temp
+	for (var i = 0; i < geoPolarray.length; i++) {
+		temp = geoPolarray[i][0]
+		geoPolarray[i][0] = geoPolarray[i][1];
+		geoPolarray[i][1] = temp;
+	}
+	var Polygon = L.polygon(geoPolarray,{
+		"color": "#E92D63",
+		"weight": 3,
+		"opacity": 0.8,
+		"fillColor": "#562DE9",
+		"fillOpacity": 0.4
+	}).addTo(map);
+	var cityname = document.getElementById('municipality').innerHTML ;
+	cityname = "\"" + municipality + "\"@ja" 
+   	sparqlQuery = "";
+   	sparqlQuery = sparqlQuery + " PREFIX xsd:<http://www.w3.org/2001/XMLSchema#> \n";
+   	sparqlQuery = sparqlQuery + " PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#> \n";
+   	sparqlQuery = sparqlQuery + " PREFIX dcterms:<http://purl.org/dc/terms/> \n";
+   	sparqlQuery = sparqlQuery + " PREFIX geo: <http://www.opengis.net/ont/geosparql#> \n";
+   	sparqlQuery = sparqlQuery + " PREFIX ogcf: <http://www.opengis.net/def/function/geosparql/> \n";
+   	sparqlQuery = sparqlQuery + " PREFIX sdmx-dimension: <http://purl.org/linked-data/sdmx/2009/dimension#> \n";
+   	sparqlQuery = sparqlQuery + " PREFIX estat-measure: <http://data.e-stat.go.jp/lod/ontology/measure/> \n";
+   	sparqlQuery = sparqlQuery + " PREFIX cd-dimension: <http://data.e-stat.go.jp/lod/ontology/crossDomain/dimension/> \n";
+   	sparqlQuery = sparqlQuery + " PREFIX cd-code: <http://data.e-stat.go.jp/lod/ontology/crossDomain/code/> \n";
+   	sparqlQuery = sparqlQuery + " PREFIX g00200521-dimension-2010:<http://data.e-stat.go.jp/lod/ontology/g00200521/dimension/2010/> \n";
+   	sparqlQuery = sparqlQuery + " PREFIX g00200521-code-2010:<http://data.e-stat.go.jp/lod/ontology/g00200521/code/2010/> \n";
+   	sparqlQuery = sparqlQuery + " select DISTINCT ?population ?jpopulation where { \n";
+   	sparqlQuery = sparqlQuery + " ?s3 estat-measure:population ?population ; \n";
+   	sparqlQuery = sparqlQuery + " sdmx-dimension:refArea / dcterms:identifier \"" + municipalityCode + "\" ; \n";
+   	sparqlQuery = sparqlQuery + " cd-dimension:timePeriod \"2015\"^^xsd:gYear ; \n";
+   	sparqlQuery = sparqlQuery + " cd-dimension:sex cd-code:sex-all ; \n";
+   	sparqlQuery = sparqlQuery + " cd-dimension:nationality cd-code:nationality-all ; \n";
+   	sparqlQuery = sparqlQuery + " g00200521-dimension-2010:area g00200521-code-2010:area-all ; \n";
+   	sparqlQuery = sparqlQuery + " cd-dimension:age cd-code:age-all . \n";
+   	sparqlQuery = sparqlQuery + " ?s4 estat-measure:population ?jpopulation ; \n";
+   	sparqlQuery = sparqlQuery + " sdmx-dimension:refArea / dcterms:identifier  \"" + municipalityCode + "\"  ; \n";
+   	sparqlQuery = sparqlQuery + " cd-dimension:timePeriod \"2015\"^^xsd:gYear ; \n";
+   	sparqlQuery = sparqlQuery + " cd-dimension:sex cd-code:sex-all ; \n";
+   	sparqlQuery = sparqlQuery + " cd-dimension:nationality cd-code:nationality-japan ; \n";
+   	sparqlQuery = sparqlQuery + " g00200521-dimension-2010:area g00200521-code-2010:area-all ; \n";
+   	sparqlQuery = sparqlQuery + " cd-dimension:age cd-code:age-all . \n";
+   	sparqlQuery = sparqlQuery + " ";
+   	sparqlQuery = sparqlQuery + " } \n";
+    //document.getElementById("showQuery").innerHTML = "<textarea>" + sparqlQuery + "</textarea >";
+   	d3sparql.query("http://data.e-stat.go.jp/lod/sparql/alldata/query", sparqlQuery, render2)
+
+   	sparqlQuery = "";
+   	sparqlQuery = sparqlQuery + " PREFIX xsd:<http://www.w3.org/2001/XMLSchema#> \n";
+   	sparqlQuery = sparqlQuery + " PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#> \n";
+   	sparqlQuery = sparqlQuery + " PREFIX dcterms:<http://purl.org/dc/terms/> \n";
+   	sparqlQuery = sparqlQuery + " PREFIX geo: <http://www.opengis.net/ont/geosparql#> \n";
+   	sparqlQuery = sparqlQuery + " PREFIX ogcf: <http://www.opengis.net/def/function/geosparql/> \n";
+   	sparqlQuery = sparqlQuery + " PREFIX sdmx-dimension: <http://purl.org/linked-data/sdmx/2009/dimension#> \n";
+   	sparqlQuery = sparqlQuery + " PREFIX estat-measure: <http://data.e-stat.go.jp/lod/ontology/measure/> \n";
+   	sparqlQuery = sparqlQuery + " PREFIX cd-dimension: <http://data.e-stat.go.jp/lod/ontology/crossDomain/dimension/> \n";
+   	sparqlQuery = sparqlQuery + " PREFIX cd-code: <http://data.e-stat.go.jp/lod/ontology/crossDomain/code/> \n";
+   	sparqlQuery = sparqlQuery + " PREFIX g00200521-dimension-2010:<http://data.e-stat.go.jp/lod/ontology/g00200521/dimension/2010/> \n";
+   	sparqlQuery = sparqlQuery + " PREFIX g00200521-code-2010:<http://data.e-stat.go.jp/lod/ontology/g00200521/code/2010/> \n";
+   	sparqlQuery = sparqlQuery + " select DISTINCT ?population where { \n";
+   	sparqlQuery = sparqlQuery + " ?s5 estat-measure:population ?population ; \n";
+   	sparqlQuery = sparqlQuery + " sdmx-dimension:refArea / dcterms:identifier \"" + areaCode + "\" ; \n";
+   	sparqlQuery = sparqlQuery + " cd-dimension:timePeriod \"2015\"^^xsd:gYear ; \n";
+   	sparqlQuery = sparqlQuery + " cd-dimension:sex cd-code:sex-all ; \n";
+   	sparqlQuery = sparqlQuery + " cd-dimension:age cd-code:age-all . \n";
+   	sparqlQuery = sparqlQuery + " ";
+   	sparqlQuery = sparqlQuery + " } \n";
+    //document.getElementById("showQuery").innerHTML = "<textarea>" + sparqlQuery + "</textarea >";
+   	d3sparql.query("http://data.e-stat.go.jp/lod/sparql/alldata/query", sparqlQuery, render3)
+
+}
+
+
+
+function render2(json) {
+  var  pop = json["results"]["bindings"]["0"]["population"]["value"];
+  var jpop = json["results"]["bindings"]["0"]["jpopulation"]["value"];
+  document.getElementById("population").innerHTML = pop;
+  document.getElementById("fpopulation").innerHTML = pop - jpop;
+}
+
+function render3(json) {
+  var  pop = json["results"]["bindings"]["0"]["population"]["value"];
+  document.getElementById("areaPopulation").innerHTML = pop;
+}
+
+
+</script>
+
+
+</body>
+</html>

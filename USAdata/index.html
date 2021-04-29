@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>米国州別データ</title>
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="http://mgskjaeveland.github.io/sgvizler/v/0.6/sgvizler.js"></script>
+    <script type="text/javascript">
+      // Prefix の設定
+      sgvizler.prefix('wd', 'http://sws.ifi.uio.no/d2rq/resource/');
+      sgvizler.prefix('w', 'http://sws.ifi.uio.no/ont/world.owl#');
+      sgvizler.prefix('rdfs', 'http://www.w3.org/2000/01/rdf-schema#');
+      sgvizler.prefix('rdf', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#');
+      sgvizler.prefix('dbr', 'http://dbpedia.org/resource/');
+      sgvizler.prefix('dbo', 'http://dbpedia.org/ontology/');
+      sgvizler.prefix('dbt', 'http://purl.org/dc/terms/');
+      sgvizler.prefix('dbc', 'http://dbpedia.org/resource/Category:');
+      // HTMLファイルをロードしたら画面描画
+      $(document).ready(function() { sgvizler.containerDrawAll(); });
+  </script></head>
+<body>
+
+
+ 
+    <h2>■アメリが合衆国の州別人口</h2>
+    <div id="sgvzl_population"
+	 data-sgvizler-endpoint="http://dbpedia.org/sparql"
+	 data-sgvizler-query="select distinct ?State ?population2010 where {
+?s rdfs:label ?State.
+?s dbt:subject dbc:States_of_the_United_States.
+?s rdf:type dbo:Place.
+?s dbp:2010pop ?population2010
+FILTER (LANG(?State)='en') .
+} ORDER BY DESC(?population2010)"
+	 data-sgvizler-chart="google.visualization.PieChart"
+	 data-sgvizler-loglevel="2"
+	 style="width:800px; height:400px;"></div>
+
+    <h2>■アメリが合衆国の州別面積</h2>
+    <div id="sgvzl_area"
+	 data-sgvizler-endpoint="http://dbpedia.org/sparql"
+	 data-sgvizler-query="select distinct ?State xsd:integer(?area) where {
+?s rdfs:label ?State.
+?s dbt:subject dbc:States_of_the_United_States.
+?s rdf:type dbo:Place.
+?s dbo:areaTotal ?area.
+FILTER (LANG(?State)='en') .
+} ORDER BY DESC(?area)"
+	 data-sgvizler-chart="google.visualization.PieChart"
+	 data-sgvizler-loglevel="2"
+	 style="width:800px; height:400px;"></div>
+
+    <h2>■アメリが合衆国の州別人口、面積と家計収入中央値</h2>
+    <p>X軸は人口、Y軸は面積で、どちらもLogscale</p>
+    <div id="sgvzl_population_area"
+	 data-sgvizler-endpoint="http://dbpedia.org/sparql"
+	 data-sgvizler-query="select distinct ?State ?population2010 (xsd:integer(?areaTotal) as ?Area) (xsd:integer(?medianhouseholdincome) as ?MedianHouseHoldIncome)  where {
+?s rdfs:label ?State.
+?s rdfs:label ?State2.
+?s dbt:subject dbc:States_of_the_United_States.
+?s rdf:type dbo:Place.
+?s dbp:2010pop ?population2010.
+?s dbo:areaTotal ?areaTotal.
+?s dbp:medianhouseholdincome ?medianhouseholdincome.
+FILTER (LANG(?State)='en') .
+} ORDER BY DESC(?population2010)"
+	 data-sgvizler-chart="google.visualization.BubbleChart"
+	 data-sgvizler-loglevel="0"
+	 data-sgvizler-chart-options="vAxis.logScale=true|hAxis.logScale=true"
+	 style="width:1000px; height:1000px;"></div>
+
+
+
+
+
+  </body>
+</html>
