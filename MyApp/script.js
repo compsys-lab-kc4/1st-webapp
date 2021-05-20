@@ -65,28 +65,23 @@ $("#query").change(function() {
     });
   } else if(pref == "千葉県") {
     $("#button1").on("click", function() {
-      let chiba = '千葉！'
-      $("#detail_explanation").val(chiba);
+      
     });
   } else if(pref == "群馬県") {
     $("#button1").on("click", function() {
-      let gunnma = '群馬！'
-      $("#detail_explanation").val(gunnma);
+      
     });
   } else if(pref == "茨城県") {
     $("#button1").on("click", function() {
-      let ibaraki = '茨城！'
-      $("#detail_explanation").val(ibaraki);
+      
     });
   } else if(pref == "神奈川県") {
     $("#button1").on("click", function() {
-      let kanagawa = '神奈川！'
-      $("#detail_explanation").val(kanagawa);
+      
     });
   } else if(pref == "埼玉県") {
     $("#button1").on("click", function() {
-      let saitama = '埼玉！'
-      $("#detail_explanation").val(saitama);
+      
     });
   }
 }); 
