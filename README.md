@@ -4,3 +4,6 @@
 
 * SampleChartApp Sgivzler を使ったグラフ可視化アプリのサンプル
 * SampleMapApp Google Maps による地図可視化アプリのサンプル
+
+グラフ可視化アプリを作成しました。
+SampleChartAppのフォルダにあるindex.htmlです。
