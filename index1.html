@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>グラフを使った可視化アプリの例</title>
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="http://mgskjaeveland.github.io/sgvizler/v/0.6/sgvizler.js"></script>
+    <script type="text/javascript">
+      // Prefix の設定
+      var sgvizler;
+      sgvizler.prefix('rdf', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#');
+      sgvizler.prefix('owl', 'http://dbpedia.org/ontology/');
+      // HTMLファイルをロードしたら画面描画
+      $(document).ready(function() { sgvizler.containerDrawAll(); });
+  </script></head>
+  <body>
+    <h2>生まれた月日による人物の検索</h2>
+    <h3>＜入力例＞01-01</h3>
+    <form name="fm" action="#" method="post">
+      <p>
+      <input type="text" name="reference" id ="reference"></p>
+      <p><input type="button" value="検索" id="button2" onclick="javascript:butoClick()"></p>
+    </form>
+    <div id="sgvzl_example_table"
+	 data-sgvizler-endpoint="http://sparql.metadata.moe/dbpedia-ja/query"
+	 data-sgvizler-query='PREFIX dbpedia-ja: <http://ja.dbpedia.org/resource/>
+   PREFIX owl: <http://dbpedia.org/ontology/>
+   select ?s ?o
+   where { 
+       ?s ?p ?o.
+       FILTER(?p = owl:birthDate).
+   }
+   ORDER BY desc(?o)
+   LIMIT 100
+   '
+		     data-sgvizler-chart="google.visualization.Table"
+		     data-sgvizler-loglevel="2" style="width:500px; height:1000px;"></div>
+  <script>
+    function butoClick(){
+      var data = $("#reference").val();
+      var query = "PREFIX dbpedia-ja: <http://ja.dbpedia.org/resource/>\r\n"+
+"   PREFIX owl: <http://dbpedia.org/ontology/>\r\n"+
+"   select ?s ?o\r\n"+
+"   where { \r\n"+
+ "      ?s ?p ?o.\r\n"+
+"       FILTER(?p = owl:birthDate).\r\n"+
+"       FILTER(regex(str(?o), \""+data+"\")) .\r\n"+
+"   }" +
+"ORDER BY desc(?o)\r\n"+
+"   LIMIT 100 \r\n";
+      $("#sgvzl_example_table").attr("data-sgvizler-query",query);
+      sgvizler.containerDrawAll();
+    }
+  </script>
+	      </body>
+	    </html>
