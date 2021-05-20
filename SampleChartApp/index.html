@@ -13,35 +13,126 @@
       sgvizler.prefix('owl', 'http://dbpedia.org/ontology/');
       // HTMLファイルをロードしたら画面描画
       $(document).ready(function() { sgvizler.containerDrawAll(); });
-  </script></head>
+  </script>
+	</head>
   <body>
-    <h1>グラフを使った可視化アプリの例</h1>
-    <h2>都道府県ごとの大学数</h2>
+		<input type="button" value="建築" onclick="clickBtn('arc')"/>
+		<input type="button" value="雑誌" onclick="clickBtn('mgz')"/>
+		<select id="query" class="form-control">
+			<option>-選択してください-</option>
+			<option value="京都府">京都府</option>
+			<option value="木">雑誌</option>
+		</select>
+
     <h3>■棒グラフ</h3>
-    <div id="sgvzl_example_query"
-	 data-sgvizler-endpoint="http://ja.dbpedia.org/sparql"
-	 data-sgvizler-query="select distinct ?p (count(?p) as ?count)
-	    where {
-	    ?u rdf:type owl:University;
-	      owl:locationCity ?p .
-	    ?p owl:country <http://ja.dbpedia.org/resource/日本>
-	    } group by ?p
-	    order by desc (?count)"
-	 data-sgvizler-chart="google.visualization.BarChart"
-	 data-sgvizler-loglevel="2"
-	 style="width:1000px; height:1000px;"></div>
+		<h4 class="arc">建築数</h4>
+		<div id="arcg"
+			data-sgvizler-endpoint="https://jpsearch.go.jp/rdf/sparql"
+			data-sgvizler-query="PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+			PREFIX schema: <http://schema.org/>
+			PREFIX place: <https://jpsearch.go.jp/entity/place/>
+			PREFIX type: <https://jpsearch.go.jp/term/type/>
+			SELECT distinct ?name (count(?label) as ?count)
+			WHERE {
+			?pref schema:spatial ?place ;
+			rdfs:label ?label;
+			a type:建築.
+			?place rdfs:label ?name;
+			schema:isPartOf place:日本.
+			}
+			group by ?name
+			order by desc(?count)"
+			data-sgvizler-chart="google.visualization.BarChart"
+			data-sgvizler-loglevel="2"
+			style="width:1000px; height:3000px;"
+			class="arc">
+		</div>
+
+		<h4 class="mgz">雑誌数</h4>
+		<div id="mgzg"
+			class="mgz"
+			data-sgvizler-endpoint="https://jpsearch.go.jp/rdf/sparql"
+			data-sgvizler-query="PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+			PREFIX schema: <http://schema.org/>
+			PREFIX place: <https://jpsearch.go.jp/entity/place/>
+			PREFIX type: <https://jpsearch.go.jp/term/type/>
+			SELECT distinct ?name (count(?label) as ?count)
+			WHERE {
+			?pref schema:spatial ?place ;
+			rdfs:label ?label;
+			a type:建築.
+			?place rdfs:label ?name;
+			schema:isPartOf place:日本.
+			}
+			group by ?name
+			order by desc(?count)"
+			data-sgvizler-chart="google.visualization.BarChart"
+			data-sgvizler-loglevel="2"
+			style="width:1000px; height:3000px;">
+		</div>
+
 
     <h3>■テーブル</h3>
-    <div id="sgvzl_example_table"
-	 data-sgvizler-endpoint="http://ja.dbpedia.org/sparql"
-	 data-sgvizler-query="select distinct ?p (count(?p) as ?count)
-	    where {
-	    ?u rdf:type owl:University;
-	      owl:locationCity ?p .
-	    ?p owl:country <http://ja.dbpedia.org/resource/日本>
-	    } group by ?p
-	    order by desc (?count)"
-		     data-sgvizler-chart="google.visualization.Table"
-		     data-sgvizler-loglevel="2" style="width:500px; height:1000px;"></div>
-	      </body>
-	    </html>
+		<h4 class="arc">建築数</h4>
+    <div id="arct"
+			data-sgvizler-endpoint="https://jpsearch.go.jp/rdf/sparql"
+			data-sgvizler-query="PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+			PREFIX schema: <http://schema.org/>
+			PREFIX place: <https://jpsearch.go.jp/entity/place/>
+			PREFIX type: <https://jpsearch.go.jp/term/type/>
+			SELECT distinct ?name (count(?label) as ?count)
+			WHERE {
+			?pref schema:spatial ?place ;
+			rdfs:label ?label;
+			a type:建築.
+			?place rdfs:label ?name;
+			schema:isPartOf place:日本.
+			}
+			group by ?name
+			order by desc(?count)"
+			data-sgvizler-loglevel="2" style="width:500px; height:1000px;"
+			class='arc'>
+		</div>
+
+		<h4 class="mgz">雑誌数</h4>
+    <div id="mgzt"
+			class="mgz"
+			data-sgvizler-endpoint="https://jpsearch.go.jp/rdf/sparql"
+			data-sgvizler-query="PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+			PREFIX schema: <http://schema.org/>
+			PREFIX place: <https://jpsearch.go.jp/entity/place/>
+			PREFIX type: <https://jpsearch.go.jp/term/type/>
+			SELECT distinct ?name (count(?label) as ?count)
+			WHERE {
+			?pref schema:spatial ?place ;
+			rdfs:label ?label;
+			a type:建築.
+			?place rdfs:label ?name;
+			schema:isPartOf place:日本.
+			}
+			group by ?name
+			order by desc(?count)"
+			data-sgvizler-loglevel="2" style="width:500px; height:1000px;">
+		</div>
+		<script>
+			const arc = document.getElementsByClassName('arc');
+			const mgz = document.getElementsByClassName('mgz')
+			for(const elem of arc){
+				elem.style.display="none";
+			}
+			for(const elem of mgz){
+				elem.style.display="none";
+			}
+			function clickBtn(syu){
+				const arc = document.getElementsByClassName(syu);
+				for(const elem of arc){
+					if(elem.style.display == "block"){
+						elem.style.display = "none";
+					}else{
+						elem.style.display = "block";
+					}
+				}
+			}
+		</script>
+	</body>
+</html>
