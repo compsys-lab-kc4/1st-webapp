@@ -13,28 +13,23 @@
       sgvizler.prefix('rdf', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#');
       sgvizler.prefix('owl', 'http://dbpedia.org/ontology/');
       // HTMLファイルをロードしたら画面描画
-      $(document).ready(function() { sgvizler.containerDrawAll(); });
+      var today = new Date();
+      $(document).ready(function() { sgvizler.containerDrawAll();
+        $("#reference").val(today.getMonth()+1 + "-"+today.getDate());
+        butoClick();
+       });
   </script></head>
   <body>
     <h2>生まれた月日による人物の検索</h2>
     <h3>＜入力例＞01-01</h3>
     <form name="fm" action="#" method="post">
       <p>
-      <input type="text" name="reference" id ="reference"></p>
+      <input type="text" name="reference" id ="reference" ></p>
       <p><input type="button" value="検索" id="button2" onclick="javascript:butoClick()"></p>
     </form>
     <div id="sgvzl_example_table"
 	 data-sgvizler-endpoint="http://sparql.metadata.moe/dbpedia-ja/query"
-	 data-sgvizler-query='PREFIX dbpedia-ja: <http://ja.dbpedia.org/resource/>
-   PREFIX owl: <http://dbpedia.org/ontology/>
-   select ?s ?o
-   where { 
-       ?s ?p ?o.
-       FILTER(?p = owl:birthDate).
-   }
-   ORDER BY desc(?o)
-   LIMIT 100
-   '
+	 data-sgvizler-query=''
 		     data-sgvizler-chart="google.visualization.Table"
 		     data-sgvizler-loglevel="2" style="width:500px; height:1000px;"></div>
   <script>
