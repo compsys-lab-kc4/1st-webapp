@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>グラフを使った可視化アプリの例</title>
+    <meta charset="UTF-8" />
+    <script
+      type="text/javascript"
+      src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.js"
+    ></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script
+      type="text/javascript"
+      src="http://mgskjaeveland.github.io/sgvizler/v/0.6/sgvizler.js"
+    ></script>
+    <link
+      href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <script type="text/javascript">
+      // Prefix の設定
+      sgvizler.prefix(
+        "category-ja",
+        "http://ja.dbpedia.org/resource/Category:"
+      );
+      sgvizler.prefix("dbpedia-owl", "http://dbpedia.org/ontology/");
+      // HTMLファイルをロードしたら画面描画
+      $(document).ready(function () {
+        sgvizler.containerDrawAll();
+      });
+    </script>
+  </head>
+  <body>
+    <h1 class="text-2xl text-center">グラフを使った可視化アプリ</h1>
+    <h2 class="text-xl">都道府県ごとの魅力度（個数）</h2>
+    <h3 class="text-md">■棒グラフ</h3>
+    <div
+      class="max-w-full h-screen max-h-full"
+      id="sgvzl_example_query"
+      data-sgvizler-endpoint="https://sparql.metadata.moe/dbpedia-ja/query"
+      data-sgvizler-query="
+      select ?s (count(?o) AS ?c)
+      where {
+        ?s rdf:type dbpedia-owl:Place .
+        ?s dbpedia-owl:wikiPageWikiLink category-ja:日本の都道府県 .
+        ?s dbpedia-owl:wikiPageWikiLink ?o .
+      }
+      group by ?s
+      order by desc(?c)
+            "
+      data-sgvizler-chart="google.visualization.BarChart"
+      data-sgvizler-loglevel="2"
+    ></div>
+
+    <h3 class="text-md">■テーブル</h3>
+    <div
+      class="max-w-full h-96 max-h-full"
+      id="sgvzl_example_table"
+      data-sgvizler-endpoint="https://sparql.metadata.moe/dbpedia-ja/query"
+      data-sgvizler-query="
+      select ?s (count(?o) AS ?c)
+      where {
+        ?s rdf:type dbpedia-owl:Place .
+        ?s dbpedia-owl:wikiPageWikiLink category-ja:日本の都道府県 .
+        ?s dbpedia-owl:wikiPageWikiLink ?o .
+      }
+      group by ?s
+      order by desc(?c)
+            "
+      data-sgvizler-chart="google.visualization.Table"
+      data-sgvizler-loglevel="2"
+    ></div>
+  </body>
+</html>
