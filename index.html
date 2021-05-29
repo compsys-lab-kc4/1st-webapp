@@ -31,10 +31,10 @@
     <meta name="twitter:description" content="この世界遺産MAPは世界各国の世界遺産が世界地図上で確認できます！ぜひ、こんなところにこんな世界遺産があったんだという発見を楽しんでみて下さい！気になるものはクリックすると画像や説明を見ることができます。もっと知りたくなったら、Wikipediaの該当ページへも簡単にGO!"> 
     <meta name="twitter:image" content="twitter_card.png">
 
-    
 
+    
     <style>
-      img.depict {max-width: 300px;height: auto;}
+      
       h{font-size:24px;}
       p{font-size:14px;}
 
@@ -98,9 +98,9 @@
 
       //クエリを入力
       var endpoint = "https://dbpedia.org/sparql";
-      var sparql = "PREFIX geo:  <https://www.w3.org/2003/01/geo/wgs84_pos#>"+
-        "PREFIX foaf: <https://xmlns.com/foaf/0.1/>"+
-        "PREFIX dbo: <https://dbpedia.org/ontology/>"+
+      var sparql = "PREFIX geo:  <http://www.w3.org/2003/01/geo/wgs84_pos#>"+
+        "PREFIX foaf: <http://xmlns.com/foaf/0.1/>"+
+        "PREFIX dbo: <http://dbpedia.org/ontology/>"+
         
         "select distinct ?name ?lat ?long ?abstract ?depict where {"+
           "?s rdf:type dbo:WorldHeritageSite."+
@@ -151,7 +151,7 @@
           var depict = HeritageList['results']['bindings'][site]['depict']['value'];
 
           //ポップアップ作成
-          var sucontents = "<div class='depict'><img src="+depict+"></div><br><h><b>"+name+"</b></h><br><p>"+abstract+" <a target='_blank' rel='noopener noreferrer' href = 'https://ja.wikipedia.org/wiki/"+name+"'>さらに詳しく</a></p>"
+          var sucontents = "<img width=250px height= auto src="+depict+"><br><h><b>"+name+"</b></h><br><p>"+abstract+" <a target='_blank' rel='noopener noreferrer' href = 'https://ja.wikipedia.org/wiki/"+name+"'>さらに詳しく</a></p>"
           var popup = L.popup({ maxWidth: 350 }).setContent(sucontents);
           
           //マーカをプロット
