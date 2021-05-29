@@ -9,6 +9,91 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.0/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.3.0/dist/leaflet.js"></script>
     
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XNEZ1MDJER"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-XNEZ1MDJER');
+    </script>
+
+    <title>
+      世界遺産MAP
+    </title>
+
+    <meta name=”description” content=”この世界遺産MAPは世界各国の世界遺産が世界地図上で確認できます！ぜひ、こんなところにこんな世界遺産があったんだという発見を楽しんでみて下さい！気になるものはクリックすると画像や説明を見ることができます。もっと知りたくなったら、Wikipediaの該当ページへも簡単にGO!”>
+    
+    <meta name="twitter:card" content="summary_large_image"> 
+    <meta name="twitter:site" content="@ShotaImamura"> 
+    <meta name="twitter:title" content="世界遺産MAP"> 
+    <meta name="twitter:description" content="この世界遺産MAPは世界各国の世界遺産が世界地図上で確認できます！ぜひ、こんなところにこんな世界遺産があったんだという発見を楽しんでみて下さい！気になるものはクリックすると画像や説明を見ることができます。もっと知りたくなったら、Wikipediaの該当ページへも簡単にGO!"> 
+    <meta name="twitter:image" content="twitter_card.png">
+
+    
+
+    <style>
+      img.depict {max-width: 300px;height: auto;}
+      h{font-size:24px;}
+      p{font-size:14px;}
+
+      #loader-bg {
+        display: none;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0px;
+        left: 0px;
+        right:0px;
+        background: #fff;
+        z-index: 1;
+      }
+
+      #loader {
+        display: none;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        margin-top:auto;
+        margin-bottom: auto;
+        left: 0px;
+        right:0px;
+        text-align: center;
+        background: #9ED9F5;
+        z-index: 2;
+      }
+
+    </style>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    
+    <script>
+      $(function() {
+        var h = $(window).height();
+        
+        $('#wrap').css('display','none');
+        $('#loader-bg ,#loader').height(h).css('display','block');
+      });
+        
+      $(window).load(function () { //全ての読み込みが完了したら実行
+        $('#loader-bg').delay(1600).fadeOut(300);
+        $('#loader').delay(1500).fadeOut(300);
+        $('#wrap').css('display', 'block');
+      });
+        
+      //10秒たったら強制的にロード画面を非表示
+      $(function(){
+        setTimeout('stopload()',10000);
+      });
+        
+      function stopload(){
+        $('#wrap').css('display','block');
+        $('#loader-bg').delay(900).fadeOut(800);
+        $('#loader').delay(600).fadeOut(300);
+      }
+    </script>
+
     <script>
 
       //クエリを入力
@@ -17,13 +102,17 @@
         "PREFIX foaf: <http://xmlns.com/foaf/0.1/>"+
         "PREFIX dbo: <http://dbpedia.org/ontology/>"+
         
-        "select distinct ?name ?lat ?long where {"+
+        "select distinct ?name ?lat ?long ?abstract ?depict where {"+
           "?s rdf:type dbo:WorldHeritageSite."+
           "?s rdfs:label ?name."+
           "?s geo:lat ?lat."+
           "?s geo:long ?long."+
 
-          "FILTER ( lang(?name) = 'en' )}";
+          "FILTER ( lang(?name) = 'ja' )"+
+          "optional {"+
+          "?s foaf:depiction ?depict."+
+          "?s dbo:abstract ?abstract.}"+
+          "FILTER ( lang(?abstract) = 'ja')}";
       
       //クエリを実行して、JSONを変数に入れる
 
@@ -33,46 +122,60 @@
     
       
 
-    //地図部分
+      //地図部分
 
-    function init(HeritageList) {
-            console.log(HeritageList['results']['bindings'])
-             
-            //ズームコントロールを非表示で地図を作成
-            var map = L.map('mapcontainer', { zoomControl: false });
-            map.setView([35.40, 136], 5);
-            L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', {
-                attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"
-            }).addTo(map);
-            //スケールコントロールを最大幅200px、右下、m単位で地図に追加
-            L.control.scale({ maxWidth: 200, position: 'bottomright', imperial: false }).addTo(map);
-            //ズームコントロールを左下で地図に追加
-            L.control.zoom({ position: 'bottomleft' }).addTo(map);
-            
-            //for文でHeritageListを回す
+      function init(HeritageList) {
+        console.log(HeritageList['results']['bindings'])
+        
+        //ズームコントロールを非表示で地図を作成
+        var map = L.map('mapcontainer', {zoomControl: false });
+        map.setView([35.40, 136], 5);
+        L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', {
+            attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"
+        }).addTo(map);
+        //スケールコントロールを最大幅200px、右下、m単位で地図に追加
+        L.control.scale({ maxWidth: 200, position: 'bottomright', imperial: false }).addTo(map);
+        //ズームコントロールを左下で地図に追加
+        L.control.zoom({ position: 'bottomleft' }).addTo(map);
+        
+        //for文でHeritageListを回す
 
-            for (var site in HeritageList['results']['bindings']){
-              
-              //世界遺産のリストからマーカーを追加
-              var name = HeritageList['results']['bindings'][site]['name']['value'];
-              var lat = HeritageList['results']['bindings'][site]['lat']['value'];
-              var long = HeritageList['results']['bindings'][site]['long']['value'];
-              L.marker([lat,long],{title:name}).addTo(map);
-            }
+        for (var site in HeritageList['results']['bindings']){
+          //世界遺産のリストからマーカーを追加
+
+          //情報取得
+          var name = HeritageList['results']['bindings'][site]['name']['value'];
+          var lat = HeritageList['results']['bindings'][site]['lat']['value'];
+          var long = HeritageList['results']['bindings'][site]['long']['value'];
+          var abstract = HeritageList['results']['bindings'][site]['abstract']['value'];
+          var depict = HeritageList['results']['bindings'][site]['depict']['value'];
+
+          //ポップアップ作成
+          var sucontents = "<div class='depict'><img src="+depict+"></div><br><h><b>"+name+"</b></h><br><p>"+abstract+" <a target='_blank' rel='noopener noreferrer' href = 'https://ja.wikipedia.org/wiki/"+name+"'>さらに詳しく</a></p>"
+          var popup = L.popup({ maxWidth: 350 }).setContent(sucontents);
+          
+          //マーカをプロット
+          L.marker([lat,long]).bindPopup(popup).bindTooltip(name).addTo(map);
+        }
 
       //地図部分終了
-
-    }
+      }
     </script>
 
     
   </head>
 
   <body onload="init()">
+    <div id="loader-bg">
+      <div id="loader">
+        <img src="loading.png" width=100% height=auto alt="Now Loading..." />
+      </div>
+    </div>
 
+    <div id="wrap">
+      <div id="mapcontainer" style="position:absolute;top:0;left:0;right:0;bottom:0;"></div>
+    </div>
 
-
-    <div id="mapcontainer" style="position:absolute;top:0;left:0;right:0;bottom:0;"></div>
-  </body>
+    </body>
 </html>
 
