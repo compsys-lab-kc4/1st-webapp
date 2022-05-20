@@ -7,8 +7,8 @@ $(document).ready(function() {
   // Selectタグの変化
   $("select").change(function() {
     if (this.value !== "-選択してください-") {
-      sparql = "PREFIX dbpedia: <http://ja.dbpedia.org/resource/> PREFIX dbpedia-owl: <http://dbpedia.org/ontology/> PREFIX prop-ja: <http://ja.dbpedia.org/property/> PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> SELECT distinct ?name, ?label WHERE { ?pref rdf:type dbpedia-owl:Place; dbpedia-owl:wikiPageWikiLink category-ja:日本の都道府県; prop-ja:都道府県名 ?name; prop-ja:" + this.value + " ?o . ?o rdfs:label ?label. }"
-      d3sparql.query("http://ja.dbpedia.org/sparql", sparql, render)
+      sparql = "PREFIX dbpedia: <http://ja.dbpedia.org/resource/> PREFIX dbpedia-owl: <http://dbpedia.org/ontology/> PREFIX prop-ja: <http://ja.dbpedia.org/property/> PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> SELECT distinct ?name ?label WHERE { ?pref rdf:type dbpedia-owl:Place; prop-ja:都道府県名 ?name; prop-ja:" + this.value + " ?o. ?o rdfs:label ?label. }"
+      d3sparql.query("https://sparql.metadata.moe/dbpedia-ja/query", sparql, render)
     }
   });
 });
